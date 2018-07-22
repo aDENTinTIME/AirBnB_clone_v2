@@ -15,6 +15,10 @@ from models.amenity import Amenity
 from models.review import Review
 
 
+classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
+
+
 class HBNBCommand(cmd.Cmd):
     '''
         Contains the entry point of the command interpreter.
@@ -32,23 +36,37 @@ class HBNBCommand(cmd.Cmd):
         '''
             Exits after receiving the EOF signal.
         '''
+        print()
         return True
 
-    def do_create(self, args):
+    def do_create(self, arg):
         '''
             Create a new instance of class BaseModel and saves it
             to the JSON file.
         '''
-        if len(args) == 0:
+        args = arg.split(" ")
+        new_args = []
+        for a in args:
+            print(a)
+            start_idx = a.find("=")
+            print(start_idx)
+            a = a[0: start_idx] + a[start_idx:].replace('_', ' ')
+            new_args.append(a)
+        if len(new_args[0]) == 0:
             print("** class name missing **")
             return
-        try:
-            args = shlex.split(args)
-            new_instance = eval(args[0])()
-            new_instance.save()
-            print(new_instance.id)
 
-        except:
+        if new_args[0] in classes:
+            new_instance = classes[new_args[0]]()
+            print(new_instance.id)
+            new_instance.save()
+
+            for a in new_args:
+                if a != new_args[0]:
+                    param = a.replace("=", " ")
+                    self.do_update(new_args[0] + " " + new_instance.id +
+                                   " " + param)
+        else:
             print("** class doesn't exist **")
 
     def do_show(self, args):
