@@ -6,6 +6,7 @@ import json
 import models
 
 
+
 class FileStorage:
     '''
         Serializes instances to JSON file and deserializes to JSON file.
@@ -13,10 +14,16 @@ class FileStorage:
     __file_path = "file.json"
     __objects = {}
 
-    def all(self):
+    def all(self, cls=None):
         '''
             Return the dictionary
         '''
+        #print(cls)
+        #print("LOOK")
+        #print(self.__objects[cls.__name__])
+        #for k,v in self.__objects:
+            #convert v (dict) into object
+            #reassign objectified v to self.__objects
         return self.__objects
 
     def new(self, obj):
@@ -36,7 +43,6 @@ class FileStorage:
         objects_dict = {}
         for key, val in FileStorage.__objects.items():
             objects_dict[key] = val.to_dict()
-
         with open(FileStorage.__file_path, mode='w', encoding="UTF8") as fd:
             json.dump(objects_dict, fd)
 
@@ -53,3 +59,15 @@ class FileStorage:
                 FileStorage.__objects[key] = class_name(**val)
         except FileNotFoundError:
             pass
+
+    def delete(self, obj=None):
+        #print("OBJ below")
+        #print(obj)
+        #for key, val in FileStorage.__objects.items():
+            #print("####")
+            #print(key)
+            #print(val)
+            #print("####")
+            #if val == obj:
+                #del obj;
+        pass
