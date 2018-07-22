@@ -6,6 +6,8 @@ import json
 import models
 
 
+#classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
+#           "Place": Place, "Review": Review, "State": State, "User": User}
 
 class FileStorage:
     '''
@@ -18,12 +20,6 @@ class FileStorage:
         '''
             Return the dictionary
         '''
-        #print(cls)
-        #print("LOOK")
-        #print(self.__objects[cls.__name__])
-        #for k,v in self.__objects:
-            #convert v (dict) into object
-            #reassign objectified v to self.__objects
         return self.__objects
 
     def new(self, obj):
@@ -61,13 +57,7 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        #print("OBJ below")
-        #print(obj)
-        #for key, val in FileStorage.__objects.items():
-            #print("####")
-            #print(key)
-            #print(val)
-            #print("####")
-            #if val == obj:
-                #del obj;
-        pass
+        for key, val in FileStorage.__objects.items():
+            if val == obj:
+                del self.__objects[key]
+                break
