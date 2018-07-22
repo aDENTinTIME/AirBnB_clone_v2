@@ -40,7 +40,7 @@ class BaseModel:
         '''
             Return string representation of BaseModel class
         '''
-        return '<%s.%s object at %s>' % (
+        return "<{}.{} object at {}>".format(
             self.__class__.__module__,
             self.__class__.__name__,
             hex(id(self))
