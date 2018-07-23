@@ -45,11 +45,8 @@ class BaseModel:
         '''
             Return string representation of BaseModel class
         '''
-        return '<{}.{} object at {}>'.format(
-            self.__class__.__module__,
-            self.__class__.__name__,
-            hex(id(self))
-        )
+        return ("[{}] ({}) {}".format(self.__class__.__name__,
+                                      self.id, self.__dict__))
 
     def save(self):
         '''
