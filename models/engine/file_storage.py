@@ -6,9 +6,6 @@ import json
 import models
 
 
-#classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-#           "Place": Place, "Review": Review, "State": State, "User": User}
-
 class FileStorage:
     '''
         Serializes instances to JSON file and deserializes to JSON file.
@@ -20,7 +17,14 @@ class FileStorage:
         '''
             Return the dictionary
         '''
-        return self.__objects
+        if cls:
+            new_dict = {}
+            for key, val in self.__objects.items():
+                if isinstance(val, cls):
+                    new_dict[key] = val
+            return new_dict
+        else:
+            return self.__objects
 
     def new(self, obj):
         '''
@@ -39,6 +43,7 @@ class FileStorage:
         objects_dict = {}
         for key, val in FileStorage.__objects.items():
             objects_dict[key] = val.to_dict()
+
         with open(FileStorage.__file_path, mode='w', encoding="UTF8") as fd:
             json.dump(objects_dict, fd)
 
@@ -57,7 +62,7 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        for key, val in FileStorage.__objects.items():
-            if val == obj:
-                del self.__objects[key]
-                break
+        """
+        delete object from __objects
+        """
+        self.__objects.pop(obj.__class__.__name__ + "." + str(obj.id), None)
