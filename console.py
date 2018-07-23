@@ -59,11 +59,21 @@ class HBNBCommand(cmd.Cmd):
             print(new_instance.id)
             new_instance.save()
 
+            new_dict = {}
             for a in new_args:
                 if a != new_args[0]:
-                    param = a.replace("=", " ")
-                    self.do_update(new_args[0] + " " + new_instance.id +
-                                   " " + param)
+                    new_list = list(a.split('='))
+                    new_dict[new_list[0]] = new_list[1]
+            for k, v in new_dict.items():
+                try:
+                    if type(eval(v)).__name__ == 'int'\
+                       or type(eval(v)).__name__ == 'float':
+                        setattr(new_instance, k, eval(v))
+                    elif type(eval(v)).__name__ == 'str':
+                        setattr(new_instance, k, v)
+                    new_instance.save()
+                except:
+                    pass
         else:
             print("** class doesn't exist **")
 
