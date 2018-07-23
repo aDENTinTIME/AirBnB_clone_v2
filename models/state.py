@@ -6,10 +6,8 @@
 from models.base_model import BaseModel
 
 
-class State(BaseModel, Base):
+class State(BaseModel):
     '''
         Implementation for the State.
     '''
-    __tablename__ = 'states'
-    name = Column(String(128), nullable=False)
-    cities = relationship("City", primaryjoin="state_id=State.id", cascade="delete")
+    name = ""
