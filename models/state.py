@@ -2,8 +2,10 @@
 '''
     Implementation of the State class
 '''
-
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
+from models.city import City
 
 
 class State(BaseModel, Base):
@@ -12,4 +14,4 @@ class State(BaseModel, Base):
     '''
     __tablename__ = 'states'
     name = Column(String(128), nullable=False)
-    cities = relationship("City", primaryjoin="state_id=State.id", cascade="delete")
+    cities = relationship("City", primaryjoin="City.state_id==State.id", cascade="delete")
