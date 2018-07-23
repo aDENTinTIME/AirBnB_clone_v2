@@ -20,7 +20,7 @@ class FileStorage:
         if cls:
             new_dict = {}
             for key, val in self.__objects.items():
-                if isinstance(val, cls):
+                if val.__class__.__name__ == cls.__name__:
                     new_dict[key] = val
             return new_dict
         else:
@@ -65,4 +65,6 @@ class FileStorage:
         """
         delete object from __objects
         """
-        self.__objects.pop(obj.__class__.__name__ + "." + str(obj.id), None)
+        if obj is not None:
+            self.__objects.pop(obj.__class__.__name__ + "." + str(obj.id), None)
+            self.save()
