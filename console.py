@@ -36,7 +36,7 @@ class HBNBCommand(cmd.Cmd):
         '''
             Exits after receiving the EOF signal.
         '''
-        #print()
+        print()
         return True
 
     def do_create(self, arg):
