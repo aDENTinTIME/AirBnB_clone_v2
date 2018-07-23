@@ -47,9 +47,7 @@ class HBNBCommand(cmd.Cmd):
         args = arg.split(" ")
         new_args = []
         for a in args:
-            print(a)
             start_idx = a.find("=")
-            print(start_idx)
             a = a[0: start_idx] + a[start_idx:].replace('_', ' ')
             new_args.append(a)
         if len(new_args[0]) == 0:
