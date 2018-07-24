@@ -2,9 +2,9 @@
 """create class DBStorage"""
 from os import getenv
 from sqlalchemy import (create_engine)
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from models.amenity import Amenity
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
 from models.city import City
 from models.place import Place
 from models.review import Review
@@ -18,24 +18,22 @@ host = getenv("HBNB_MYSQL_HOST")
 password = getenv("HBNB_MYSQL_PWD")
 hbnb_env = getenv("HBNB_ENV")
 
-classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
+classes = {"State": State, "City": City}
 
 
 class DBStorage:
     """class DBStorage"""
     __engine = None
     __session = None
-    __dbobjects = {}
 
     def __init__(self):
         """initialize instances"""
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format
+                                      (user, password, host, database),
+                                      pool_pre_ping=True)
+
         if hbnb_env == 'test':
-            self.__table__.drop()
-        else:
-            self.engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format
-                                        (database, user, host, password),
-                                        pool_pre_ping=True)
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """return dictionary of instance attributes
@@ -44,22 +42,22 @@ class DBStorage:
         Returns:
             dictionary of objects
         """
-
-        if cls is None:
-            for k, v in classes.items():
-                for obj in self.__session.query(val).all():
-                    print(obj)
-                    key = str(cls.__name__) + "." + str(obj.id)
-                    val = obj
-                    self.__dbobjects[key] = val
-        else:
+        dbobjects = {}
+        if cls:
+            print("cls exists")
             if cls.__name__ in classes:
-                for obj in self.session.query(classes[cls.__name__]).all():
-                    print(obj)
-                    key = str(cls.__name__) + "." + str(obj.id)
+                for obj in self.session.query(cls).all():
+                    key = str(obj.__class__.__name__) + "." + str(obj.id)
                     val = obj
-                    self.__dbobjects[key] = val
-        return self.__dbobjects
+                    dbobjects[key] = val
+        else:
+            print("cls does not exist")
+            for k, v in classes.items():
+                for obj in self.__session.query(v).all():
+                    key = str(v.__name__) + "." + str(obj.id)
+                    val = obj
+                    dbobjects[key] = val
+        return dbobjects
 
     def new(self, obj):
         """
@@ -67,7 +65,8 @@ class DBStorage:
         Args:
             obj (obj): an object
         """
-        self.__session.add(obj)
+        if obj:
+            self.__session.add(obj)
 
     def save(self):
         """
@@ -88,6 +87,8 @@ class DBStorage:
         """
         create all tables in the database and the current database session
         """
-        Base.metadata.create_all(engine)
-        self.__session = sessionmaker(engine, expire_on_commit=True)
-        Session = scoped_session(self.__session)
+        Base.metadata.create_all(self.__engine)
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False)
+        Session = scoped_session(session_factory)
+        self.__session = Session()
