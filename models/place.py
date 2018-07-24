@@ -3,6 +3,7 @@
     Define the class Place.
 '''
 from models.base_model import BaseModel, Base
+from models.review import Review
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
 from sqlalchemy.orm import relationship, sessionmaker
 from os import getenv
@@ -27,8 +28,8 @@ class Place(BaseModel, Base):
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
         amenity_ids = []
-        #review = relationship("Review", backref="place",
-        #                      cascade="all, delete-orphan")
+        reviews = relationship("Review", backref="place",
+                               cascade="all, delete-orphan")
     else:
         city_id = ""
         user_id = ""
@@ -41,10 +42,16 @@ class Place(BaseModel, Base):
         latitude = 0.0
         longitude = 0.0
         amenity_ids = []
+
+    @property
+    def reviews(self):
         """
-        a_list = []
-        session = Session()
-        for review, place in session.query(Review, Place).\
-            filter(Review.place_id == Place.id).all():
-            a_list.append(review)
+        get list of Review instances with
+        place_id equals to the current Place.id
         """
+        list_reviews = []
+        all_reviews = self.reviews
+        for review in all_reviews:
+            if review.place_id == Place.id:
+                list_reviews.append(review)
+        return list_reviews
