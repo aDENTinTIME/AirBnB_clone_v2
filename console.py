@@ -51,7 +51,7 @@ class HBNBCommand(cmd.Cmd):
         '''
 
         args = arg.split()
-        print(args)
+        #print(args)
 
         new_args = []
         for a in args:
@@ -70,17 +70,17 @@ class HBNBCommand(cmd.Cmd):
                 if a != new_args[0]:
                     new_list = a.split('=')
                     new_dict[new_list[0]] = new_list[1]
-            print(new_dict)
+            #print(new_dict)
 
             for k, v in new_dict.items():
-                print(k)
-                print(v)
-                print(new_dict)
+                #print(k)
+                #print(v)
+                #print(new_dict)
                 if v[0] == '"':
                     v_list = shlex.split(v)
                     new_dict[k] = v_list[0]
-                    print(v)
-                    print(new_dict)
+                    #print(v)
+                    #print(new_dict)
                 else:
                     try:
                         if type(eval(v)).__name__ == 'int':
@@ -94,7 +94,7 @@ class HBNBCommand(cmd.Cmd):
                         continue
                 setattr(new_instance, k, new_dict[k])
             new_instance.save()
-            print("SAVED ATTRIBUTES")
+            #print("SAVED ATTRIBUTES")
             print(new_instance.id)
         else:
             print("** class doesn't exist **")
