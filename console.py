@@ -5,7 +5,8 @@
 import cmd
 import json
 import shlex
-from models.engine.file_storage import FileStorage
+#from models.engine.file_storage import FileStorage
+#from models.engine.db_storage import DBStorage
 from models.base_model import BaseModel
 from models.user import User
 from models.place import Place
@@ -13,7 +14,11 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from os import getenv
+from models import storage
+#import models
 
+storage_type = getenv("HBNB_TYPE_STORAGE")
 
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
@@ -44,36 +49,53 @@ class HBNBCommand(cmd.Cmd):
             Create a new instance of class BaseModel and saves it
             to the JSON file.
         '''
-        args = arg.split(" ")
+
+        args = arg.split()
+        print(args)
+
         new_args = []
         for a in args:
             start_idx = a.find("=")
             a = a[0: start_idx] + a[start_idx:].replace('_', ' ')
             new_args.append(a)
+
         if len(new_args[0]) == 0:
             print("** class name missing **")
             return
 
         if new_args[0] in classes:
             new_instance = classes[new_args[0]]()
-            print(new_instance.id)
-            new_instance.save()
-
             new_dict = {}
             for a in new_args:
                 if a != new_args[0]:
-                    new_list = list(a.split('='))
+                    new_list = a.split('=')
                     new_dict[new_list[0]] = new_list[1]
+            print(new_dict)
+
             for k, v in new_dict.items():
-                try:
-                    if type(eval(v)).__name__ == 'int'\
-                       or type(eval(v)).__name__ == 'float':
-                        setattr(new_instance, k, eval(v))
-                    elif type(eval(v)).__name__ == 'str':
-                        setattr(new_instance, k, v)
-                    new_instance.save()
-                except:
-                    pass
+                print(k)
+                print(v)
+                print(new_dict)
+                if v[0] == '"':
+                    v_list = shlex.split(v)
+                    new_dict[k] = v_list[0]
+                    print(v)
+                    print(new_dict)
+                else:
+                    try:
+                        if type(eval(v)).__name__ == 'int':
+                            v = eval(v)
+                    except:
+                        continue
+                    try:
+                        if type(eval(str(v))).__name__ == 'float':
+                            v = eval(v)
+                    except:
+                        continue
+                setattr(new_instance, k, new_dict[k])
+            new_instance.save()
+            print("SAVED ATTRIBUTES")
+            print(new_instance.id)
         else:
             print("** class doesn't exist **")
 
@@ -139,7 +161,10 @@ class HBNBCommand(cmd.Cmd):
             based or not on the class name.
         '''
         obj_list = []
-        storage = FileStorage()
+#        if storage_type == 'db':
+#            storage = DBStorage()
+#        else:
+#            storage = FileStorage()
         storage.reload()
         objects = storage.all()
         try:
@@ -162,8 +187,6 @@ class HBNBCommand(cmd.Cmd):
             Update an instance based on the class name and id
             sent as args.
         '''
-        storage = FileStorage()
-        storage.reload()
         args = shlex.split(args)
         if len(args) == 0:
             print("** class name missing **")
@@ -208,8 +231,6 @@ class HBNBCommand(cmd.Cmd):
             Counts/retrieves the number of instances.
         '''
         obj_list = []
-        storage = FileStorage()
-        storage.reload()
         objects = storage.all()
         try:
             if len(args) != 0:
