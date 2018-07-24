@@ -18,7 +18,7 @@ host = getenv("HBNB_MYSQL_HOST")
 password = getenv("HBNB_MYSQL_PWD")
 hbnb_env = getenv("HBNB_ENV")
 
-classes = {"State": State, "City": City, "User": User}
+classes = {"State": State, "City": City, "User": User, "Place": Place}
 
 
 class DBStorage:
