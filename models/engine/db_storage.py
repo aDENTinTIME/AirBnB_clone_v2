@@ -18,7 +18,7 @@ host = getenv("HBNB_MYSQL_HOST")
 password = getenv("HBNB_MYSQL_PWD")
 hbnb_env = getenv("HBNB_ENV")
 
-classes = {"State": State, "City": City}
+classes = {"State": State, "City": City, "User": User}
 
 
 class DBStorage:
@@ -44,14 +44,12 @@ class DBStorage:
         """
         dbobjects = {}
         if cls:
-            print("cls exists")
             if cls.__name__ in classes:
                 for obj in self.session.query(cls).all():
                     key = str(obj.__class__.__name__) + "." + str(obj.id)
                     val = obj
                     dbobjects[key] = val
         else:
-            print("cls does not exist")
             for k, v in classes.items():
                 for obj in self.__session.query(v).all():
                     key = str(v.__name__) + "." + str(obj.id)
