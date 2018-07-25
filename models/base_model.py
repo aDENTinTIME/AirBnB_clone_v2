@@ -10,6 +10,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class BaseModel:
     '''
         Base class for other classes to be used for the duration.
@@ -27,13 +28,13 @@ class BaseModel:
             self.created_at = self.updated_at = datetime.now()
         else:
             if kwargs.get('created_at'):
-                kwargs["created_at"] = datetime.strptime(kwargs["created_at"],
-                                                         "%Y-%m-%dT%H:%M:%S.%f")
+                kwargs["created_at"] = datetime.strptime(
+                    kwargs["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
             else:
                 self.created_at = datetime.utcnow()
             if kwargs.get('updated_at'):
-                kwargs["updated_at"] = datetime.strptime(kwargs["updated_at"],
-                                                         "%Y-%m-%dT%H:%M:%S.%f")
+                kwargs["updated_at"] = datetime.strptime(
+                    kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
             else:
                 self.updated_at = datetime.utcnow()
 
@@ -75,6 +76,7 @@ class BaseModel:
         cp_dct['updated_at'] = self.updated_at.strftime("%Y-%m-%dT%H:%M:%S.%f")
         cp_dct['created_at'] = self.created_at.strftime("%Y-%m-%dT%H:%M:%S.%f")
         del cp_dct['_sa_instance_state']
+        #print(cp_dct)
         return cp_dct
 
     def delete(self):
