@@ -14,7 +14,6 @@ from models.amenity import Amenity
 from models.review import Review
 from os import getenv
 from models import storage
-#import models
 
 storage_type = getenv("HBNB_TYPE_STORAGE")
 
