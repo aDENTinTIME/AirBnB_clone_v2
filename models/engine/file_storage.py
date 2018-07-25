@@ -86,9 +86,10 @@ class FileStorage:
         delete object from __objects if it's inside
         """
         if obj is not None:
-            for k, v in FileStorage.__objects.items():
-                if v == obj:
-                    del FileStorage.__objects[k]
+            key = obj.__class__.__name__ + "." + str(obj.id)
+            if key in self.__objects:
+                del self.__objects[key]
+        self.save()
 
         """
         if obj is not None:
