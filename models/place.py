@@ -6,7 +6,6 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Integer, Float, Table
 from sqlalchemy.orm import relationship
 from os import getenv
-from models import storage
 
 storage_type = getenv("HBNB_TYPE_STORAGE")
 
@@ -20,7 +19,6 @@ if storage_type == 'db':
                           Column('amenity_id', String(60),
                                  ForeignKey('amenities.id'),
                                  primary_key=True, nullable=False))
-
 
 
 class Place(BaseModel, Base):
@@ -80,11 +78,11 @@ class Place(BaseModel, Base):
             returns the list of Amenity instances based on the attribute
             amenity_ids that contains all Amenity.id linked to the Place
             """
-            amenity_objs= []
+            amenity_objs = []
             for amenity_id in self.amenity_ids:
                 key = 'Amenity.' + amenity_id
-                if key, val in FileStorage.__objects.items():
-                    amenity_objs.append(val)
+                if key in FileStorage.__objects:
+                    amenity_objs.append(FileStorage.__objects[key])
             return amenity_objs
 
         @amenities.setter
