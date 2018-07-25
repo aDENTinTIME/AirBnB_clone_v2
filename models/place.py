@@ -3,12 +3,21 @@
     Define the class Place.
 '''
 from models.base_model import BaseModel, Base
-from models.review import Review
-from sqlalchemy import Column, String, ForeignKey, Integer, Float
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy import Column, String, ForeignKey, Integer, Float, Table
+from sqlalchemy.orm import relationship
 from os import getenv
 
 storage_type = getenv("HBNB_TYPE_STORAGE")
+
+if storage_type == 'db':
+    metadata = Base.metadata
+    place_amenity = Table("place_amenity", metadata,
+                          Column('place_id', String(60),
+                                 ForeignKey('places.id'),
+                                 primary_key=True, nullable=False),
+                          Column('amenity_id', String(60),
+                                 ForeignKey('amenities.id'),
+                                 primary_key=True, nullable=False))
 
 
 class Place(BaseModel, Base):
@@ -30,6 +39,10 @@ class Place(BaseModel, Base):
         amenity_ids = []
         reviews = relationship("Review", backref="place",
                                cascade="all, delete-orphan")
+        amenities = relationship("Amenity", secondary=place_amenity,
+                                 back_populates="place_amenities",
+                                 viewonly=False)
+
     else:
         city_id = ""
         user_id = ""
@@ -43,15 +56,38 @@ class Place(BaseModel, Base):
         longitude = 0.0
         amenity_ids = []
 
-    @property
-    def reviews(self):
-        """
-        get list of Review instances with
-        place_id equals to the current Place.id
-        """
-        list_reviews = []
-        all_reviews = self.reviews
-        for review in all_reviews:
-            if review.place_id == Place.id:
-                list_reviews.append(review)
-        return list_reviews
+    if storage_type != 'db':
+        @property
+        def reviews(self):
+            """
+            get list of Review instances with
+            place_id equals to the current Place.id
+            """
+            list_reviews = []
+            all_reviews = self.reviews
+            for review in all_reviews:
+                if review.place_id == Place.id:
+                    list_reviews.append(review)
+            return list_reviews
+
+        @property
+        def amenities(self):
+            """
+            returns the list of Amenity instances based on the attribute
+            amenity_ids that contains all Amenity.id linked to the Place
+            """
+            list_amenities = []
+            all_amenities = self.amenity_ids
+            for amenity in all_amenities:
+                if amenity.id == Place.id:
+                    list_amenities.append(amenity)
+            return list_amenities
+
+        @amenities.setter
+        def amenities(self, obj):
+            """
+            adds an Amenity.id to the attribute amenity_ids if obj is
+            an instance of Amenity
+            """
+            if isinstance(obj, Amenity):
+                self.amenity_ids.append(obj.id)
