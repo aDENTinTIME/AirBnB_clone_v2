@@ -5,8 +5,6 @@
 import cmd
 import json
 import shlex
-#from models.engine.file_storage import FileStorage
-#from models.engine.db_storage import DBStorage
 from models.base_model import BaseModel
 from models.user import User
 from models.place import Place
@@ -53,15 +51,15 @@ class HBNBCommand(cmd.Cmd):
         args = arg.split()
         #print(args)
 
+        if len(args[0]) == 0:
+            print("** class name missing **")
+            return
+
         new_args = []
         for a in args:
             start_idx = a.find("=")
             a = a[0: start_idx] + a[start_idx:].replace('_', ' ')
             new_args.append(a)
-
-        if len(new_args[0]) == 0:
-            print("** class name missing **")
-            return
 
         if new_args[0] in classes:
             new_instance = classes[new_args[0]]()
@@ -161,12 +159,13 @@ class HBNBCommand(cmd.Cmd):
             based or not on the class name.
         '''
         obj_list = []
-#        if storage_type == 'db':
-#            storage = DBStorage()
-#        else:
-#            storage = FileStorage()
-        storage.reload()
+        #print("LOOK")
+        #print(storage.all())
+        #print("HERE")
         objects = storage.all()
+        #del objects['_sa_instance_state']
+        #print('DELETED BELOW')
+        #print(objects)
         try:
             if len(args) != 0:
                 eval(args)
