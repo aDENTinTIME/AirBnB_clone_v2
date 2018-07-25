@@ -9,6 +9,7 @@ from os import getenv
 
 storage_type = getenv("HBNB_TYPE_STORAGE")
 
+"""
 if storage_type == 'db':
     metadata = Base.metadata
     place_amenity = Table("place_amenity", metadata,
@@ -18,6 +19,7 @@ if storage_type == 'db':
                           Column('amenity_id', String(60),
                                  ForeignKey('amenities.id'),
                                  primary_key=True, nullable=False))
+"""
 
 
 class Place(BaseModel, Base):
@@ -39,10 +41,11 @@ class Place(BaseModel, Base):
         amenity_ids = []
         reviews = relationship("Review", backref="place",
                                cascade="all, delete-orphan")
+        """
         amenities = relationship("Amenity", secondary=place_amenity,
                                  back_populates="place_amenities",
                                  viewonly=False)
-
+        """
     else:
         city_id = ""
         user_id = ""
@@ -69,7 +72,7 @@ class Place(BaseModel, Base):
                 if review.place_id == Place.id:
                     list_reviews.append(review)
             return list_reviews
-
+        '''
         @property
         def amenities(self):
             """
@@ -91,3 +94,4 @@ class Place(BaseModel, Base):
             """
             if isinstance(obj, Amenity):
                 self.amenity_ids.append(obj.id)
+        '''
