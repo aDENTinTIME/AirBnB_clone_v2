@@ -28,6 +28,10 @@ class FileStorage:
         '''
             Return the dictionary
         '''
+        #print("in filestorage.py all")
+        #print(self.__objects)
+        return self.__objects
+        """
         if cls:
             new_dict = {}
             for key, val in self.__objects.items():
@@ -36,7 +40,7 @@ class FileStorage:
             return new_dict
         else:
             return self.__objects
-
+        """
     def new(self, obj):
         '''
             Set in __objects the obj with key <obj class name>.id
@@ -54,7 +58,10 @@ class FileStorage:
         objects_dict = {}
         for key, val in FileStorage.__objects.items():
             objects_dict[key] = val.to_dict()
-
+        #print("in save of filestorage.py")
+        #print(FileStorage.__objects)
+        #print(objects_dict)
+        #print("STOP")
         with open(FileStorage.__file_path, mode='w', encoding="UTF8") as fd:
             json.dump(objects_dict, fd)
 
@@ -69,13 +76,23 @@ class FileStorage:
                 class_name = val["__class__"]
                 class_name = classes[class_name]
                 FileStorage.__objects[key] = class_name(**val)
+            #print("in file_storage.py reload")
+            #print(FileStorage.__objects)
         except FileNotFoundError:
             pass
 
     def delete(self, obj=None):
         """
-        delete object from __objects
+        delete object from __objects if it's inside
         """
         if obj is not None:
-            self.__objects.pop(obj.__class__.__name__ + "." + str(obj.id), None)
+            for k, v in FileStorage.__objects.items():
+                if v == obj:
+                    del FileStorage.__objects[k]
+
+        """
+        if obj is not None:
+            self.__objects.pop(obj.__class__.__name__
+        + "." + str(obj.id), None)
             self.save()
+        """
