@@ -17,9 +17,7 @@ class State(BaseModel, Base):
     '''
         Implementation for the State.
     '''
-
     __tablename__ = 'states'
-
     if storage_type == 'db':
         name = Column(String(128), nullable=False)
         cities = relationship("City", backref="state",
@@ -27,14 +25,16 @@ class State(BaseModel, Base):
     else:
         name = ""
 
-    @property
-    def cities(self):
-        """
-        get list of City instances with state_id equals to the current State.id
-        """
-        list_cities = []
-        all_cities = self.cities
-        for city in all_cities:
-            if city.state_id == State.id:
-                list_cities.append(city)
-        return list_cities
+    if storage_type != 'db':
+        @property
+        def cities(self):
+            """
+            get list of City instances with state_id
+            equals to the current State.id
+            """
+            list_cities = []
+            all_cities = self.cities
+            for city in all_cities:
+                if city.state_id == State.id:
+                    list_cities.append(city)
+            return list_cities
