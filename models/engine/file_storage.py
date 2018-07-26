@@ -28,8 +28,8 @@ class FileStorage:
         '''
             Return the dictionary
         '''
-        #print("in filestorage.py all")
-        #print(self.__objects)
+        # print("in filestorage.py all")
+        # print(self.__objects)
         return self.__objects
         """
         if cls:
@@ -58,10 +58,10 @@ class FileStorage:
         objects_dict = {}
         for key, val in FileStorage.__objects.items():
             objects_dict[key] = val.to_dict()
-        #print("in save of filestorage.py")
-        #print(FileStorage.__objects)
-        #print(objects_dict)
-        #print("STOP")
+        # print("in save of filestorage.py")
+        # print(FileStorage.__objects)
+        # print(objects_dict)
+        # print("STOP")
         with open(FileStorage.__file_path, mode='w', encoding="UTF8") as fd:
             json.dump(objects_dict, fd)
 
@@ -76,8 +76,8 @@ class FileStorage:
                 class_name = val["__class__"]
                 class_name = classes[class_name]
                 FileStorage.__objects[key] = class_name(**val)
-            #print("in file_storage.py reload")
-            #print(FileStorage.__objects)
+            # print("in file_storage.py reload")
+            # print(FileStorage.__objects)
         except FileNotFoundError:
             pass
 

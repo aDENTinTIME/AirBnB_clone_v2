@@ -37,7 +37,7 @@ class BaseModel:
             else:
                 self.created_at = datetime.utcnow()  # assign current time
             if kwargs.get('updated_at'):
-                #preserve existing updated_at time
+                # preserve existing updated_at time
                 kwargs["updated_at"] = datetime.strptime(
                     kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
             else:
