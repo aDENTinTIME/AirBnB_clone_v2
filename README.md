@@ -1,7 +1,7 @@
 # Synopsis
 
-The Airbnb clone project for which we are creating a copy of the [Airbnb](https://www.airbnb.com/).
-Only some features will be implemented and will be listed below once completed. 
+The Airbnb clone project for which we are creating a copy of the [Airbnb](https://www.airbnb.com/) website.
+Only some features will be implemented and will be listed below once completed.
 
 
 ## Features
@@ -16,6 +16,8 @@ The Command Interpreter is used to manage the whole application's functionality 
 + Execute operation on objects. e.g. Count, compute statistics, etc.
 + Update object's attributes.
 + Destroy an object.
+
+In this version of the clone, we use a database, MySql to store our data. This makes things more manipulatable, each instance of an object equates to a row in a table. We also connect realated instances, so we can easily say something like, "show me the cities in a state" (not in so many words) and get back a list of cities.
 
 #### Usage
 
