@@ -48,7 +48,7 @@ class HBNBCommand(cmd.Cmd):
         '''
         args = arg.split()
 
-        if len(args[0]) == 0:
+        if len(args) == 0:
             print("** class name missing **")
             return
 

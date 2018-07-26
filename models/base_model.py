@@ -27,7 +27,6 @@ class BaseModel:
             # if no dictionary of attributes is passed in
             self.id = str(uuid.uuid4())
             self.created_at = self.updated_at = datetime.now()
-            models.storage.new(self)
         else:
             # assign a dictionary of attributes to instance
 
@@ -81,10 +80,8 @@ class BaseModel:
         cp_dct['__class__'] = self.__class__.__name__
         cp_dct['updated_at'] = self.updated_at.strftime("%Y-%m-%dT%H:%M:%S.%f")
         cp_dct['created_at'] = self.created_at.strftime("%Y-%m-%dT%H:%M:%S.%f")
-        print(cp_dct)
         if '_sa_instance_state' in cp_dct:
             del cp_dct['_sa_instance_state']
-        print(cp_dct)
         return cp_dct
 
     def delete(self):
