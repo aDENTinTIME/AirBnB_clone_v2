@@ -100,8 +100,6 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 1:
             print("** instance id missing **")
             return
-        storage = FileStorage()
-        storage.reload()
         obj_dict = storage.all()
         try:
             eval(args[0])
@@ -129,8 +127,6 @@ class HBNBCommand(cmd.Cmd):
             return
         class_name = args[0]
         class_id = args[1]
-        storage = FileStorage()
-        storage.reload()
         obj_dict = storage.all()
         try:
             eval(class_name)
@@ -150,13 +146,7 @@ class HBNBCommand(cmd.Cmd):
             based or not on the class name.
         '''
         obj_list = []
-        #print("LOOK")
-        #print(storage.all())
-        #print("HERE")
         objects = storage.all()
-        #del objects['_sa_instance_state']
-        #print('DELETED BELOW')
-        #print(objects)
         try:
             if len(args) != 0:
                 eval(args)
