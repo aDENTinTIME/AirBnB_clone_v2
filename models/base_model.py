@@ -24,21 +24,27 @@ class BaseModel:
             Initialize public instance attributes.
         '''
         if len(kwargs) == 0:
+            # if no dictionary of attributes is passed in
             self.id = str(uuid.uuid4())
             self.created_at = self.updated_at = datetime.now()
+            models.storage.new(self)
         else:
+            # assign a dictionary of attributes to instance
+
+            # preserve existing created_at time
             if kwargs.get('created_at'):
                 kwargs["created_at"] = datetime.strptime(
                     kwargs["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
             else:
-                self.created_at = datetime.utcnow()
+                self.created_at = datetime.utcnow()  # assign current time
             if kwargs.get('updated_at'):
+                #preserve existing updated_at time
                 kwargs["updated_at"] = datetime.strptime(
                     kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
             else:
                 self.updated_at = datetime.utcnow()
 
-            if not kwargs.get('id'):
+            if self.id not in kwargs:
                 self.id = str(uuid.uuid4())
 
             for key, val in kwargs.items():
