@@ -46,9 +46,7 @@ class HBNBCommand(cmd.Cmd):
             Create a new instance of class BaseModel and saves it
             to the JSON file.
         '''
-
         args = arg.split()
-        #print(args)
 
         if len(args[0]) == 0:
             print("** class name missing **")
@@ -67,17 +65,12 @@ class HBNBCommand(cmd.Cmd):
                 if a != new_args[0]:
                     new_list = a.split('=')
                     new_dict[new_list[0]] = new_list[1]
-            #print(new_dict)
 
             for k, v in new_dict.items():
-                #print(k)
-                #print(v)
-                #print(new_dict)
                 if v[0] == '"':
                     v_list = shlex.split(v)
                     new_dict[k] = v_list[0]
-                    #print(v)
-                    #print(new_dict)
+                    setattr(new_instance, k, new_dict[k])
                 else:
                     try:
                         if type(eval(v)).__name__ == 'int':
@@ -89,9 +82,8 @@ class HBNBCommand(cmd.Cmd):
                             v = eval(v)
                     except:
                         continue
-                setattr(new_instance, k, new_dict[k])
+                    setattr(new_instance, k, v)
             new_instance.save()
-            #print("SAVED ATTRIBUTES")
             print(new_instance.id)
         else:
             print("** class doesn't exist **")
