@@ -44,7 +44,7 @@ class BaseModel:
             else:
                 self.updated_at = datetime.utcnow()
 
-            if self.id not in kwargs:
+            if not kwargs.get('id'):
                 self.id = str(uuid.uuid4())
 
             for key, val in kwargs.items():
