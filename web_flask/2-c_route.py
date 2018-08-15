@@ -21,6 +21,6 @@ if __name__ == "__main__":
     @app.route("/c/<text>")
     def c_text(text):
         strict_slashes = False
-        return text.replace("_", " ")
+        return "C " + text.replace("_", " ")
 
     app.run(host="0.0.0.0", port=5000)
