@@ -45,8 +45,13 @@ class DBStorage:
         """
         dbobjects = {}
         if cls:
-            if cls.__name__ in classes:
-                for obj in self.session.query(cls).all():
+            if cls in classes:
+                for obj in self.__session.query(classes[cls]).all():
+                    key = str(obj.__class__.__name__) + "." + str(obj.id)
+                    val = obj
+                    dbobjects[key] = val
+            elif cls.__name__ in classes:
+                for obj in self.__session.query(cls).all():
                     key = str(obj.__class__.__name__) + "." + str(obj.id)
                     val = obj
                     dbobjects[key] = val
