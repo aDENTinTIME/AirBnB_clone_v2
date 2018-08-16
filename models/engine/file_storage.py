@@ -97,3 +97,9 @@ class FileStorage:
         + "." + str(obj.id), None)
             self.save()
         """
+
+    def close(self):
+    """
+    closes
+    """
+    self.reload()
